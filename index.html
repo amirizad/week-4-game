@@ -10,15 +10,26 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <div class="container">
-    <div class="main">
-
-    </div>
+  <div class="main">
+    <form id="battle">
+      <input id="me" type="hidden">
+      <input id="defender" type="hidden">
+      <p id="char1" class="charbox"></p>
+      <p id="char2" class="charbox"></p>
+      <p id="char3" class="charbox"></p>
+      <p id="char4" class="charbox"></p>
+      <div class="ctrl">
+        <button type="button" id="attack" class="btn">Attack</button>
+        <button type="button" id="reset" class="btn">Reset</button>
+        <textarea id="alert" rows="2"></textarea>
+      </div>
+    </form>
   </div>
-  <div id="footer" class="center">
+  <div id="footer" class="footer">
     <div>&copy; Copyright <script>document.write(new Date().getFullYear())</script> Amir Izadpanah</div>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script src="assets/js/game.js"></script>
 </body>
 </html>

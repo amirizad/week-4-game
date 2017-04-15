@@ -1,0 +1,30 @@
+[
+	{
+		"char": 1,
+		"name": "Finn",
+		"hpwr": 100,
+		"attkpwr": 5,
+		"image": "char1.jpg"
+	},
+	{
+		"char": 2,
+		"name": "Rey",
+		"hpwr": 120,
+		"attkpwr": 8,
+		"image": "char2.jpg"
+	},
+	{
+		"char": 3,
+		"name": "Stormtrooper",
+		"hpwr": 150,
+		"attkpwr": 20,
+		"image": "char3.jpg"
+	},
+	{
+		"char": 4,
+		"name": "Keylo Ren",
+		"hpwr": 180,
+		"attkpwr": 25,
+		"image": "char4.jpg"
+	}
+]
