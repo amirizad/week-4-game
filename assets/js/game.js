@@ -2,7 +2,6 @@ var gameData = {};
 var alertTxt = "";
 var alertCh = 0;
 $(window).on('load', function () {
-	// var gameData = getJson();
 	
 	$.getJSON( "data/starwars.json", function() {
 	  console.log( "success" );
@@ -32,15 +31,17 @@ $(window).on('load', function () {
 			$('#alert').empty();
 			selChar.addClass('selected');
 			if($('.me').length === 0){
-				selChar.addClass('me');
 				selChar.switchClass( thisID, 'player', 1000, 'easeInOutQuad' );
+				selChar.addClass('me');
 				var defNo = 0;
 				$('p:not(.me)').each(function(){
 					defNo++;
 					$(this).attr('data-def-no', defNo);
 					$(this).switchClass( thisID, 'def' + defNo , 1000, 'easeInOutQuad' );
 				})
-				$('#me').attr({'data-char-no' : charNo , 'data-hp' : selChar.attr('data-hp') , 'data-ap' : selChar.attr('data-ap')});
+				$('#me').attr({ 'data-char-no' : charNo ,
+								'data-hp' : selChar.attr('data-hp') ,
+								'data-ap' : selChar.attr('data-ap')});
 				$('#me').val($('#me').attr('data-ap'));
 			}else{
 				selChar.addClass('defender');
@@ -70,20 +71,24 @@ function getJson(){
 };
 
 function setGame(){
-	$('p').removeAttr('class').addClass('charbox');
+	// $('p').removeAttr('class').addClass('charbox');
+	if(!$('p').hasClass('charbox')){$('p').addClass('charbox')};
+	$('#attack').removeClass('off');
 	for(i = 1 ; i < 5 ; i++){
 		var charChild = ""
 		charChild = charChild + '<img id="img' + i + '" src="">';
 		charChild = charChild + '<label id="name' + i + '" class="charname"></label>';
 		charChild = charChild + '<label id="hp' + i + '" class="charhp"></label>';
 		charChild = charChild + '<span></span>';
-		$('#char' + i).attr({'data-hp' : gameData[ i - 1].hpwr,'data-ap' : gameData[i-1].attkpwr})
+		$('#char' + i).removeClass('char' + i);
+		var classes = $('#char' + i).attr('class').replace('charbox','');
+		$('#char' + i).attr({'data-hp' : gameData.character[ i - 1].hpwr,'data-ap' : gameData.character[i-1].attkpwr})
 					  .html(charChild)
-					  .addClass('char' + i);
-		$('#img' + i).attr('src', 'assets/images/' + gameData[i-1].image);
-		$('#name' + i).text(gameData[i-1].name);
-		$('#ap' + i).text(gameData[i-1].attkpwr);
-		$('#hp' + i).text(gameData[i-1].hpwr);
+					  .switchClass( classes, 'char' + i, 1000, 'easeInOutQuad' )
+		$('#img' + i).attr('src', 'assets/images/' + gameData.character[i-1].image);
+		$('#name' + i).text(gameData.character[i-1].name);
+		$('#ap' + i).text(gameData.character[i-1].attkpwr);
+		$('#hp' + i).text(gameData.character[i-1].hpwr);
 	};
 	$('form input:hidden').removeAttr('data-char-no data-hp data-ap value');
 	gameAlert(0);
@@ -145,6 +150,7 @@ function gameOver(charNo, result){
 		$('#char' + charNo).addClass('defeated');
 		gameAlert(5);
 	};
+	$('#attack').addClass('off');
 };
 
 function gameAlert(number){
