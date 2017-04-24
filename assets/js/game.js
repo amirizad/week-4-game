@@ -71,10 +71,9 @@ function getJson(){
 };
 
 function setGame(){
-	// $('p').removeAttr('class').addClass('charbox');
 	if(!$('p').hasClass('charbox')){$('p').addClass('charbox')};
 	$('#attack').removeClass('off');
-	for(i = 1 ; i < 5 ; i++){
+	for(i = 1 ; i < gameData.character.length + 1 ; i++){
 		var charChild = ""
 		charChild = charChild + '<img id="img' + i + '" src="">';
 		charChild = charChild + '<label id="name' + i + '" class="charname"></label>';
@@ -91,7 +90,7 @@ function setGame(){
 		$('#hp' + i).text(gameData.character[i-1].hpwr);
 	};
 	$('form input:hidden').removeAttr('data-char-no data-hp data-ap value');
-	gameAlert(0);
+	gameAlert.gameStartMsg();
 };
 
 function battle(){
@@ -104,7 +103,7 @@ function battle(){
 		var defAP = parseInt($('#defender').attr('data-ap'));
 		var defCharNo = $('#defender').attr('data-char-no');
 		var defNo = $('#defender').attr('data-def-no');
-		gameAlert(3);
+		gameAlert.gameBattleMsg();
 		defHP = defHP - meAP;
 		if(defHP > 0){ meHP = meHP - defAP };
 		if(meHP <= 0){
@@ -123,9 +122,9 @@ function battle(){
 		$('#hp' + meCharNo).text(meHP);
 		$('#hp' + defCharNo).text(defHP);
 	}else if($('.selected').length === 1){
-		gameAlert(2);
+		gameAlert.noEnemyMsg();
 	}else if($('.selected').length === 0){
-		gameAlert(1);
+		gameAlert.noFighterMsg();
 	}else{
 		setGame();
 	};
@@ -135,7 +134,7 @@ function destroy(charNo, defNo){
 	$('#char' + charNo).removeClass('selected defender').addClass('defeated');
 	$('#char' + charNo).switchClass( 'def', 'def' + defNo, 1000, 'easeInOutQuad' );
 	if($('.defeated').length < 3){
-		gameAlert(4);
+		gameAlert.selectNextEnemyMsg();
 	}else{
 		gameOver($('#me').attr('data-char-no'), true);
 	}
@@ -145,46 +144,54 @@ function destroy(charNo, defNo){
 function gameOver(charNo, result){
 	if(result){
 		$('#char' + charNo).switchClass( 'me player','won', 1000, 'easeInOutQuad' );
-		gameAlert(6);
+		gameAlert.gameWonMsg();
 	}else{
 		$('#char' + charNo).addClass('defeated');
-		gameAlert(5);
+		gameAlert.gameOverMsg();
 	};
 	$('#attack').addClass('off');
 };
 
-function gameAlert(number){
-	alertCh = 0;
-	switch(number){
-		case 1:
-			alertTxt = "No one in battle to fight. Please select both your charactor and enemy.";
-			break;
-		case 2:
-			alertTxt = "No enemy in battle. Please select your enemy.";
-			break;
-		case 3:
-			alertTxt = "You attacked  " + $('#defender').attr('data-name') + "  for " + $('#me').val() +
+var gameAlert = {
+	gameStartMsg : function(){
+		alertTxt = "Select characters to fight. Good Luck!";
+		typeIt();
+	},
+	noFighterMsg : function(){
+		alertTxt = "No one in battle to fight. Please select both your charactor and enemy.";
+		typeIt();
+	},
+	noEnemyMsg : function(){
+		alertTxt = "No enemy in battle. Please select your enemy.";
+		typeIt();
+	},
+	gameBattleMsg : function(){
+		alertTxt = "You attacked  " + $('#defender').attr('data-name') + "  for " + $('#me').val() +
 					   " damage.\r\n" + $('#defender').attr('data-name') + " attacked you back for " +
 					   $('#defender').attr('data-ap') + " damage.";
-			break;
-		case 4:
-			alertTxt = "You have defeated  " + $('#defender').attr('data-name') +
+		typeIt();
+	},
+	selectNextEnemyMsg : function(){
+		alertTxt = "You have defeated  " + $('#defender').attr('data-name') +
 					   " , you can choose to fight another enemy.";
-			break;
-		case 5:
-			alertTxt = "You been defeated ... GAME OVER!!!";
-			break;
-		case 6:
-			alertTxt = "You Won ... GAME OVER!!!";
-			break;
-		default:
-			alertTxt = "Select the characters. Good Luck!";
-	};
-	typeIt();
-};
+		typeIt();
+	},
+	gameOverMsg : function(){
+		alertTxt = "You been defeated ... GAME OVER!!!";
+		typeIt();
+	},
+	gameWonMsg : function(){
+		alertTxt = "You Won ... GAME OVER!!!";
+		typeIt();
+	}
+}
+
 
 function typeIt() {   
-	if(alertCh > alertTxt.length) return;
+	if(alertCh > alertTxt.length){
+		alertCh = 0;
+		return;
+	};
 	$('#alert').text(alertTxt.substring(0, alertCh++));
 	setTimeout(typeIt, 10);
 }
